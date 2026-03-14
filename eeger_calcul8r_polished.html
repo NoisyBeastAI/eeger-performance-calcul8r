@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calcul8r · eeger Registration Forecast</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Epilogue:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0C0C0E; --bg2:#131316; --bg3:#1A1A1F; --bg4:#222228;
+  --border:#2C2C35; --border2:#3A3A44;
+  --purple:#7B3FE4; --purple2:#A277FF; --teal:#00E5C3; --amber:#F5A623; --red:#FF5A6B;
+  --text:#F2F2F6; --text2:#B0B0BF; --text3:#6C6C7A; --white:#fff;
+}
+body {
+  font-family:'Epilogue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  opacity:.025;
+  pointer-events:none;
+  z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.glow-orb,.glow-orb2{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.glow-orb{width:600px;height:600px;top:-220px;right:-180px;background:radial-gradient(circle,rgba(123,63,228,.10)0%,transparent 65%);}
+.glow-orb2{width:420px;height:420px;left:-120px;bottom:40px;background:radial-gradient(circle,rgba(0,229,195,.07)0%,transparent 65%);}
+.page{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 24px 72px;}
+.product-bar{
+  margin-top:18px;
+  background:#111114;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:10px 16px;
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:var(--text3);
+  letter-spacing:.08em;
+}
+.header{
+  padding:24px 0 34px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:24px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+  margin-bottom:28px;
+}
+.header-left{display:flex;align-items:center;gap:18px}
+.logo{
+  width:54px;height:54px;border-radius:14px;background:var(--purple);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:#fff;position:relative;overflow:hidden
+}
+.logo::after{
+  content:'';
+  position:absolute;
+  inset:-50%;
+  background:linear-gradient(45deg,transparent 42%,rgba(255,255,255,.11)50%,transparent 58%)
+}
+.header-titles sup{
+  display:block;font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:6px
+}
+.header-titles h1{font-size:30px;line-height:1;font-weight:800;letter-spacing:-.03em}
+.header-titles h1 span{color:var(--purple2)}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase
+}
+.badge-teal{background:rgba(0,229,195,.09);border:1px solid rgba(0,229,195,.25);color:var(--teal)}
+.badge-purple{background:rgba(123,63,228,.10);border:1px solid rgba(123,63,228,.25);color:var(--purple2)}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:12px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative}
+.hero-title{font-size:34px;line-height:1.02;font-weight:850;letter-spacing:-.04em;max-width:760px;margin-bottom:10px}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.7;max-width:760px}
+
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border-radius:16px;overflow:hidden;margin:14px 0 0
+}
+.kpi-cell{background:var(--bg2);padding:18px 18px 16px;position:relative}
+.kpi-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-cell:nth-child(1)::before{background:var(--purple2)}
+.kpi-cell:nth-child(2)::before{background:var(--teal)}
+.kpi-cell:nth-child(3)::before{background:var(--amber)}
+.kpi-cell:nth-child(4)::before{background:#5DA6FF}
+.kpi-eyebrow{
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:10px
+}
+.kpi-number{font-size:38px;font-weight:900;line-height:1;letter-spacing:-.04em}
+.kpi-sub{margin-top:7px;font-size:11px;color:var(--text3);line-height:1.5}
+
+.hero-side{display:flex;flex-direction:column;gap:12px}
+.section-label{
+  display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:16px
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.scenarios{display:flex;gap:8px;flex-wrap:wrap}
+.scenario-btn{
+  padding:9px 16px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.18s
+}
+.scenario-btn:hover{border-color:var(--border2);color:var(--text)}
+.scenario-btn.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.note{
+  background:linear-gradient(135deg,rgba(123,63,228,.09),rgba(0,229,195,.04));
+  border:1px solid rgba(123,63,228,.18);border-radius:14px;padding:16px 18px;
+  font-size:13px;line-height:1.7;color:var(--text2)
+}
+.note strong{color:var(--text)}
+
+.input-grid{display:grid;grid-template-columns:1.05fr 1.2fr .75fr;gap:12px;margin:14px 0 12px}
+.card-tag{
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:12px
+}
+.field-grid{display:grid;gap:10px}
+.field{display:grid;grid-template-columns:1fr 112px;gap:10px;align-items:center}
+.field label{font-size:12px;color:var(--text2);line-height:1.5}
+.input{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none
+}
+.input:focus{border-color:var(--purple)}
+
+.channel-card{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--bg3);margin-bottom:10px}
+.channel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.channel-name{font-size:14px;font-weight:800}
+.channel-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mini-field label{
+  display:block;font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px
+}
+.mini-field input{
+  width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:9px;
+  padding:8px 10px;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;outline:none
+}
+.mini-field input:focus{border-color:var(--purple)}
+
+.status{margin-top:10px;font-family:'Space Mono',monospace;font-size:10px;padding:6px 10px;border-radius:8px;display:inline-block}
+.status.ok{background:rgba(0,229,195,.08);color:var(--teal)}
+.status.bad{background:rgba(255,90,107,.08);color:var(--red)}
+
+.output-col{display:grid;gap:10px}
+.output-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px}
+.output-card h3{font-size:14px;margin-bottom:6px}
+.output-big{font-size:28px;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.output-sub{font-size:12px;color:var(--text3);line-height:1.6}
+
+.incremental{
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;
+  background:linear-gradient(135deg,rgba(123,63,228,.08),rgba(0,229,195,.05));
+  border:1px solid rgba(123,63,228,.18);border-radius:14px;padding:18px 20px;margin-bottom:12px
+}
+.incremental-copy{font-size:13px;color:var(--text2);line-height:1.65;max-width:720px}
+.incremental-copy strong{color:var(--text)}
+.incremental-stats{display:flex;gap:24px}
+.inc-stat{text-align:center}
+.inc-val{font-size:24px;font-weight:900;letter-spacing:-.03em}
+.inc-sub{font-size:10px;font-family:'Space Mono',monospace;color:var(--text3);margin-top:3px}
+
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+
+.funnel-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px}
+.funnel-stage{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:center;margin-bottom:6px}
+.funnel-label{font-size:12px;color:var(--text2);font-weight:500}
+.funnel-bar-bg{height:30px;background:var(--bg3);border-radius:8px;overflow:hidden}
+.funnel-bar-fill{
+  height:100%;display:flex;align-items:center;padding:0 12px;
+  font-family:'Space Mono',monospace;font-size:11px;color:#fff;min-width:78px;border-radius:8px;
+  transition:width .45s cubic-bezier(.4,0,.2,1)
+}
+.funnel-rate{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);width:92px;text-align:right}
+.funnel-arrow{padding-left:160px;margin:-2px 0;color:var(--border2);font-size:11px}
+
+.channel-table{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.table-head,.table-row{display:grid;grid-template-columns:110px 1fr 1fr 1fr 1fr 1fr;padding:12px 18px;align-items:center}
+.table-head{background:var(--bg3);border-bottom:1px solid var(--border)}
+.table-head span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.table-row{border-bottom:1px solid var(--border)}
+.table-row:last-child{border-bottom:none}
+.table-row.total{background:var(--bg3)}
+.table-row span{font-size:12px;color:var(--text2);font-family:'Space Mono',monospace}
+.ch-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text)}
+.ch-dot{width:7px;height:7px;border-radius:50%}
+
+.pacing-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px}
+.pacing-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pacing-chart{display:flex;align-items:flex-end;gap:5px;height:96px;margin-top:16px}
+.pacing-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}
+.pacing-bar{width:100%;position:relative}
+.pacing-bar:hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--bg4);border:1px solid var(--border2);padding:4px 8px;border-radius:6px;
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--text);white-space:nowrap;z-index:5
+}
+.pacing-tick{font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);margin-top:5px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)}
+.legend-dot{width:8px;height:8px;border-radius:2px}
+
+.assumptions{
+  background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--purple);
+  border-radius:0 14px 14px 0;padding:16px 18px;font-size:11px;color:var(--text3);line-height:1.75
+}
+.assumptions strong{color:var(--text2);display:block;margin-bottom:6px;font-size:12px}
+.details{margin-top:8px}
+.details summary{cursor:pointer;list-style:none;color:var(--text2);font-size:12px;font-weight:700}
+.details summary::-webkit-details-marker{display:none}
+.details p{margin-top:10px}
+
+@media (max-width:1020px){
+  .hero,.input-grid,.panel-grid{grid-template-columns:1fr}
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  .mini-grid{grid-template-columns:repeat(2,1fr)}
+  .table-head,.table-row{grid-template-columns:110px 1fr 1fr 1fr}
+  .table-head span:nth-child(5),.table-head span:nth-child(6),
+  .table-row span:nth-child(5),.table-row span:nth-child(6){display:none}
+}
+@media (max-width:560px){
+  .page{padding:0 16px 60px}
+  .product-bar{font-size:10px}
+  .kpi-strip{grid-template-columns:1fr}
+  .field,.funnel-stage{grid-template-columns:1fr}
+  .funnel-arrow{padding-left:0}
+  .incremental-stats{width:100%;justify-content:space-between}
+}
+</style>
+</head>
+<body>
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<div class="page">
+  <div class="product-bar">noisybeast.ai / planning / calcul8r</div>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">ee</div>
+      <div class="header-titles">
+        <sup>Noisy Beast × eeger</sup>
+        <h1>Calcul<span>8</span>r</h1>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="badge badge-teal"><span class="badge-dot"></span>Live forecast</div>
+      <div class="badge badge-purple">FY26–27 · AU · 14-month</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="card">
+      <div class="card-tag">Outcome-led planning model</div>
+      <div class="hero-title">Building an efficient media investment from the bottom up.</div>
+      <div class="hero-sub">Starting with registrations and working backwards, the model estimates the investment required across channels based on audience scale, conversion economics and diminishing returns.</div>
+
+      <div class="kpi-strip">
+        <div class="kpi-cell">
+          <div class="kpi-eyebrow">Paid registrations forecast</div>
+          <div class="kpi-number" id="kpiRegs">—</div>
+          <div class="kpi-sub" id="kpiRegsSub">Forecast across campaign</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-eyebrow">Monthly registration rate</div>
+          <div class="kpi-number" id="kpiMonthly">—</div>
+          <div class="kpi-sub">Average registrations per month</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-eyebrow">Blended CPA</div>
+          <div class="kpi-number" id="kpiCpr">—</div>
+          <div class="kpi-sub" id="kpiCprSub">Compared to baseline</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-eyebrow">Projected applications</div>
+          <div class="kpi-number" id="kpiApps">—</div>
+          <div class="kpi-sub">Through the full platform funnel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="card">
+        <div class="section-label">Scenario</div>
+        <div class="scenarios" id="scenarioBar"></div>
+      </div>
+      <div class="note">
+        <strong>Built from your baseline.</strong><br>
+        Channel-specific assumptions show how media spend translates into registrations and applications.
+      </div>
+    </div>
+  </div>
+
+  <div class="input-grid">
+    <div class="card">
+      <div class="section-label">Inputs</div>
+      <div class="card-tag">2025 baseline</div>
+      <div class="field-grid">
+        <div class="field"><label>2025 cost per registration ($)</label><input class="input" id="baselineCPA" type="number" min="1" step="1"></div>
+        <div class="field"><label>Organic registrations per month</label><input class="input" id="organicRegs" type="number" min="0" step="1"></div>
+        <div class="field"><label>Campaign duration (months)</label><input class="input" id="duration" type="number" min="1" step="1"></div>
+        <div class="field"><label>Total paid media budget ($)</label><input class="input" id="budget" type="number" min="0" step="1000"></div>
+      </div>
+
+      <div class="card-tag" style="margin-top:16px">Downstream funnel</div>
+      <div class="field-grid">
+        <div class="field"><label>Registration → full profile (%)</label><input class="input" id="profileRate" type="number" min="0" max="100" step="0.1"></div>
+        <div class="field"><label>Profile → application (%)</label><input class="input" id="applicationRate" type="number" min="0" max="100" step="0.1"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Channel assumptions</div>
+      <div id="channels"></div>
+      <div id="weightStatus" class="status ok">✓ 100% allocated</div>
+    </div>
+
+    <div class="output-col">
+      <div class="output-card">
+        <h3>Total registrations</h3>
+        <div class="output-big" id="outTotalRegs">—</div>
+        <div class="output-sub" id="outTotalRegsSub">Paid + organic across campaign</div>
+      </div>
+      <div class="output-card">
+        <h3>Incremental lift</h3>
+        <div class="output-big" id="outIncremental">—</div>
+        <div class="output-sub" id="outIncrementalSub">Paid registrations above organic baseline</div>
+      </div>
+      <div class="output-card">
+        <h3>Efficiency check</h3>
+        <div class="output-big" id="outEfficiency">—</div>
+        <div class="output-sub" id="outEfficiencySub">Compared to 2025 CPA baseline</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="incremental">
+    <div class="incremental-copy">
+      <strong>How the model works.</strong>
+      Paid media is forecast separately from the organic baseline so the tool shows incremental impact clearly and avoids overstating total volume.
+    </div>
+    <div class="incremental-stats">
+      <div class="inc-stat">
+        <div class="inc-val" style="color:var(--purple2)" id="incPaid">—</div>
+        <div class="inc-sub">paid registrations</div>
+      </div>
+      <div class="inc-stat">
+        <div class="inc-val" style="color:var(--teal)" id="incOrganic">—</div>
+        <div class="inc-sub">organic baseline</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-grid">
+    <div>
+      <div class="section-label">Full platform funnel</div>
+      <div class="funnel-wrap">
+        <div class="funnel-stage"><div class="funnel-label">Impressions</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fImps" style="width:100%;background:linear-gradient(90deg,#3D1F72,#7B3FE4)">—</div></div><div class="funnel-rate">100%</div></div>
+        <div class="funnel-arrow">↓ click</div>
+        <div class="funnel-stage"><div class="funnel-label">Visits</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fVisits" style="width:70%;background:linear-gradient(90deg,#4C1D95,#9B6BF0)">—</div></div><div class="funnel-rate" id="rVisits">—</div></div>
+        <div class="funnel-arrow">↓ register</div>
+        <div class="funnel-stage"><div class="funnel-label">Registrations</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fRegs" style="width:40%;background:linear-gradient(90deg,#007A6A,#00E5C3)">—</div></div><div class="funnel-rate" id="rRegs">—</div></div>
+        <div class="funnel-arrow">↓ complete profile</div>
+        <div class="funnel-stage"><div class="funnel-label">Profiles</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fProfiles" style="width:25%;background:linear-gradient(90deg,#006F5E,#00B89A)">—</div></div><div class="funnel-rate" id="rProfiles">—</div></div>
+        <div class="funnel-arrow">↓ apply</div>
+        <div class="funnel-stage"><div class="funnel-label">Applications</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fApps" style="width:14%;background:linear-gradient(90deg,#1A5445,#4EB89A)">—</div></div><div class="funnel-rate" id="rApps">—</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Channel contribution</div>
+      <div class="channel-table">
+        <div class="table-head"><span>Channel</span><span>Budget</span><span>Impressions</span><span>Visits</span><span>Registrations</span><span>Cost / Reg</span></div>
+        <div class="table-row"><div class="ch-badge"><div class="ch-dot" style="background:#7B3FE4"></div>Programmatic</div><span id="ctProgBudget">—</span><span id="ctProgImps">—</span><span id="ctProgVisits">—</span><span id="ctProgRegs">—</span><span id="ctProgCpr">—</span></div>
+        <div class="table-row"><div class="ch-badge"><div class="ch-dot" style="background:#4267B2"></div>Meta</div><span id="ctMetaBudget">—</span><span id="ctMetaImps">—</span><span id="ctMetaVisits">—</span><span id="ctMetaRegs">—</span><span id="ctMetaCpr">—</span></div>
+        <div class="table-row"><div class="ch-badge"><div class="ch-dot" style="background:#FF0050"></div>TikTok</div><span id="ctTikBudget">—</span><span id="ctTikImps">—</span><span id="ctTikVisits">—</span><span id="ctTikRegs">—</span><span id="ctTikCpr">—</span></div>
+        <div class="table-row total"><div class="ch-badge"><strong>Total</strong></div><span id="ctTotalBudget" style="color:var(--text)">—</span><span id="ctTotalImps" style="color:var(--text)">—</span><span id="ctTotalVisits" style="color:var(--text)">—</span><span id="ctTotalRegs" style="color:var(--text)">—</span><span id="ctTotalCpr" style="color:var(--amber)">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:12px">Monthly pacing estimate</div>
+  <div class="pacing-card">
+    <div class="pacing-top">
+      <div style="font-size:13px;font-weight:600;color:var(--text2)">Registrations by month · paid + organic</div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3)">Illustrative S-curve pacing</div>
+    </div>
+    <div class="pacing-chart" id="pacingChart"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Launch phase</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Optimised always-on</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(245,166,35,.45)"></div>Organic baseline</div>
+    </div>
+  </div>
+
+  <div class="assumptions">
+    <strong>Methodology</strong>
+    Impressions are derived from budget ÷ CPM × 1,000 by channel. Visits come from channel CTR. Registrations use channel-specific visit → registration rates rather than one blended site CVR across all traffic sources. Profiles and applications are then applied sequentially.
+    <details class="details">
+      <summary>Show the underlying logic</summary>
+      <p>Paid registrations are reported separately from organic registrations so the forecast does not overstate incremental impact. The total registration view adds both together for overall platform volume. Monthly pacing uses an S-curve to reflect a slower launch period before stabilising into always-on activity.</p>
+    </details>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmtNum = n => {
+  n = Math.round(n || 0);
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  return n.toLocaleString();
+};
+const fmtDollar = n => '$' + Math.round(n || 0).toLocaleString();
+const fmtPct = n => (n || 0).toFixed(1) + '%';
+
+const SCENARIOS = {
+  conservative: {
+    baselineCPA: 65, organicRegs: 500, duration: 14, budget: 500000, profileRate: 60, applicationRate: 35,
+    channels: {
+      programmatic: { weight: 50, cpm: 10.0, ctr: 0.15, cvr: 7.0 },
+      meta:         { weight: 30, cpm: 18.0, ctr: 1.00, cvr: 12.0 },
+      tiktok:       { weight: 20, cpm: 15.0, ctr: 0.70, cvr: 8.0 }
+    }
+  },
+  proposed: {
+    baselineCPA: 65, organicRegs: 500, duration: 14, budget: 500000, profileRate: 60, applicationRate: 35,
+    channels: {
+      programmatic: { weight: 50, cpm: 8.0, ctr: 0.15, cvr: 8.5 },
+      meta:         { weight: 30, cpm: 15.0, ctr: 1.20, cvr: 13.5 },
+      tiktok:       { weight: 20, cpm: 12.0, ctr: 0.80, cvr: 9.5 }
+    }
+  },
+  optimistic: {
+    baselineCPA: 65, organicRegs: 500, duration: 14, budget: 700000, profileRate: 68, applicationRate: 42,
+    channels: {
+      programmatic: { weight: 50, cpm: 7.0, ctr: 0.22, cvr: 9.5 },
+      meta:         { weight: 30, cpm: 12.0, ctr: 1.60, cvr: 15.5 },
+      tiktok:       { weight: 20, cpm: 10.0, ctr: 1.10, cvr: 11.0 }
+    }
+  }
+};
+
+const CHANNEL_META = {
+  programmatic: { label: 'Programmatic', color: '#7B3FE4' },
+  meta: { label: 'Meta', color: '#4267B2' },
+  tiktok: { label: 'TikTok', color: '#FF0050' }
+};
+
+let activeScenario = 'proposed';
+
+function renderScenarioBar() {
+  const bar = $('scenarioBar');
+  bar.innerHTML = '';
+  [...Object.keys(SCENARIOS), 'custom'].forEach(key => {
+    const b = document.createElement('button');
+    b.className = 'scenario-btn' + (key === activeScenario ? ' active' : '');
+    b.textContent = key === 'custom' ? 'Custom' : (key === 'proposed' ? '↑ Proposed pitch' : key.charAt(0).toUpperCase() + key.slice(1));
+    b.onclick = () => {
+      activeScenario = key;
+      if (key !== 'custom') loadScenario(key);
+      renderScenarioBar();
+    };
+    bar.appendChild(b);
+  });
+}
+
+function renderChannels(channels) {
+  const wrap = $('channels');
+  wrap.innerHTML = '';
+  Object.entries(channels).forEach(([key, vals]) => {
+    const meta = CHANNEL_META[key];
+    const card = document.createElement('div');
+    card.className = 'channel-card';
+    card.dataset.key = key;
+    card.innerHTML = `
+      <div class="channel-head">
+        <div class="channel-name">${meta.label}</div>
+        <div class="channel-tag">Channel-specific assumptions</div>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-field"><label>Weight %</label><input data-field="weight" type="number" min="0" max="100" step="1" value="${vals.weight}"></div>
+        <div class="mini-field"><label>CPM $</label><input data-field="cpm" type="number" min="0" step="0.1" value="${vals.cpm}"></div>
+        <div class="mini-field"><label>CTR %</label><input data-field="ctr" type="number" min="0" step="0.01" value="${vals.ctr}"></div>
+        <div class="mini-field"><label>Visit → Reg %</label><input data-field="cvr" type="number" min="0" step="0.1" value="${vals.cvr}"></div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+  wrap.querySelectorAll('input').forEach(input => input.addEventListener('input', onCustomChange));
+}
+
+function loadScenario(name) {
+  const s = JSON.parse(JSON.stringify(SCENARIOS[name]));
+  $('baselineCPA').value = s.baselineCPA;
+  $('organicRegs').value = s.organicRegs;
+  $('duration').value = s.duration;
+  $('budget').value = s.budget;
+  $('profileRate').value = s.profileRate;
+  $('applicationRate').value = s.applicationRate;
+  renderChannels(s.channels);
+  calculate();
+}
+
+function onCustomChange() {
+  activeScenario = 'custom';
+  renderScenarioBar();
+  calculate();
+}
+
+function readState() {
+  const channels = {};
+  document.querySelectorAll('.channel-card').forEach(card => {
+    const key = card.dataset.key;
+    channels[key] = {
+      weight: parseFloat(card.querySelector('[data-field="weight"]').value) || 0,
+      cpm: parseFloat(card.querySelector('[data-field="cpm"]').value) || 0,
+      ctr: parseFloat(card.querySelector('[data-field="ctr"]').value) || 0,
+      cvr: parseFloat(card.querySelector('[data-field="cvr"]').value) || 0
+    };
+  });
+  return {
+    baselineCPA: parseFloat($('baselineCPA').value) || 0,
+    organicRegs: parseFloat($('organicRegs').value) || 0,
+    duration: Math.max(1, parseFloat($('duration').value) || 1),
+    budget: parseFloat($('budget').value) || 0,
+    profileRate: parseFloat($('profileRate').value) || 0,
+    applicationRate: parseFloat($('applicationRate').value) || 0,
+    channels
+  };
+}
+
+function calculate() {
+  const s = readState();
+  const weightSum = Object.values(s.channels).reduce((a,b)=>a+b.weight,0);
+  const weightStatus = $('weightStatus');
+  if (Math.abs(weightSum - 100) < 0.1) {
+    weightStatus.className = 'status ok';
+    weightStatus.textContent = '✓ 100% allocated';
+  } else {
+    weightStatus.className = 'status bad';
+    weightStatus.textContent = `⚠ ${weightSum.toFixed(1)}% allocated`;
+  }
+
+  let totalImps = 0, totalVisits = 0, totalPaidRegs = 0;
+  const rows = [];
+  Object.entries(s.channels).forEach(([key, c]) => {
+    const budget = s.budget * (c.weight / 100);
+    const imps = c.cpm > 0 ? (budget / c.cpm) * 1000 : 0;
+    const visits = imps * (c.ctr / 100);
+    const regs = visits * (c.cvr / 100);
+    const cpr = regs > 0 ? budget / regs : 0;
+    totalImps += imps;
+    totalVisits += visits;
+    totalPaidRegs += regs;
+    rows.push({ key, budget, imps, visits, regs, cpr });
+  });
+
+  const profiles = totalPaidRegs * (s.profileRate / 100);
+  const apps = profiles * (s.applicationRate / 100);
+  const organicTotal = s.organicRegs * s.duration;
+  const totalRegs = totalPaidRegs + organicTotal;
+  const cprTotal = totalPaidRegs > 0 ? s.budget / totalPaidRegs : 0;
+  const monthly = totalPaidRegs / s.duration;
+  const cprDelta = s.baselineCPA > 0 ? ((cprTotal - s.baselineCPA) / s.baselineCPA) * 100 : 0;
+
+  $('kpiRegs').textContent = fmtNum(totalPaidRegs);
+  $('kpiRegsSub').textContent = `${fmtNum(totalPaidRegs)} paid registrations across ${s.duration} months`;
+  $('kpiMonthly').textContent = fmtNum(monthly);
+  $('kpiCpr').textContent = fmtDollar(cprTotal);
+  $('kpiCprSub').textContent = `${cprDelta > 0 ? '+' : ''}${cprDelta.toFixed(1)}% vs 2025 CPA`;
+  $('kpiApps').textContent = fmtNum(apps);
+
+  $('outTotalRegs').textContent = fmtNum(totalRegs);
+  $('outTotalRegsSub').textContent = `${fmtNum(totalPaidRegs)} paid + ${fmtNum(organicTotal)} organic across campaign`;
+  $('outIncremental').textContent = fmtNum(totalPaidRegs);
+  $('outIncrementalSub').textContent = `Paid registrations above an organic baseline of ${fmtNum(organicTotal)}`;
+  $('outEfficiency').textContent = fmtDollar(cprTotal);
+  $('outEfficiencySub').textContent = `2025 CPA baseline: ${fmtDollar(s.baselineCPA)} ${cprTotal <= s.baselineCPA ? '– more efficient' : '– less efficient'}`;
+
+  $('incPaid').textContent = fmtNum(totalPaidRegs);
+  $('incOrganic').textContent = fmtNum(organicTotal);
+
+  $('fImps').textContent = fmtNum(totalImps);
+  $('fVisits').textContent = fmtNum(totalVisits);
+  $('fRegs').textContent = fmtNum(totalPaidRegs);
+  $('fProfiles').textContent = fmtNum(profiles);
+  $('fApps').textContent = fmtNum(apps);
+
+  const vWidth = Math.max(8, Math.min(96, (totalVisits / Math.max(totalImps,1)) * 100 * 12));
+  const rWidth = Math.max(8, Math.min(88, (totalPaidRegs / Math.max(totalVisits,1)) * 100 * 4.4));
+  const pWidth = Math.max(8, Math.min(72, rWidth * (s.profileRate / 100) * 1.1));
+  const aWidth = Math.max(8, Math.min(58, pWidth * (s.applicationRate / 100) * 1.12));
+
+  $('fVisits').style.width = vWidth + '%';
+  $('fRegs').style.width = rWidth + '%';
+  $('fProfiles').style.width = pWidth + '%';
+  $('fApps').style.width = aWidth + '%';
+
+  $('rVisits').textContent = ((totalVisits / Math.max(totalImps,1)) * 100).toFixed(2) + '% CTR';
+  $('rRegs').textContent = ((totalPaidRegs / Math.max(totalVisits,1)) * 100).toFixed(1) + '% of visits';
+  $('rProfiles').textContent = fmtPct(s.profileRate);
+  $('rApps').textContent = fmtPct(s.applicationRate);
+
+  const rowMap = {
+    programmatic: ['ctProgBudget','ctProgImps','ctProgVisits','ctProgRegs','ctProgCpr'],
+    meta: ['ctMetaBudget','ctMetaImps','ctMetaVisits','ctMetaRegs','ctMetaCpr'],
+    tiktok: ['ctTikBudget','ctTikImps','ctTikVisits','ctTikRegs','ctTikCpr']
+  };
+  rows.forEach(r => {
+    const ids = rowMap[r.key];
+    $(ids[0]).textContent = fmtDollar(r.budget);
+    $(ids[1]).textContent = fmtNum(r.imps);
+    $(ids[2]).textContent = fmtNum(r.visits);
+    $(ids[3]).textContent = fmtNum(r.regs);
+    $(ids[4]).textContent = fmtDollar(r.cpr);
+  });
+
+  $('ctTotalBudget').textContent = fmtDollar(s.budget);
+  $('ctTotalImps').textContent = fmtNum(totalImps);
+  $('ctTotalVisits').textContent = fmtNum(totalVisits);
+  $('ctTotalRegs').textContent = fmtNum(totalPaidRegs);
+  $('ctTotalCpr').textContent = fmtDollar(cprTotal);
+
+  renderPacing(totalPaidRegs, s.organicRegs, s.duration);
+}
+
+function renderPacing(totalPaidRegs, organicPerMonth, months) {
+  const chart = $('pacingChart');
+  chart.innerHTML = '';
+  const weights = [];
+  for (let i = 0; i < months; i++) {
+    const t = i / Math.max(months - 1, 1);
+    let w = i < 2 ? 0.28 + t * 0.34 : 1 / (1 + Math.exp(-8 * (t - 0.38)));
+    weights.push(Math.max(0.18, w));
+  }
+  const sum = weights.reduce((a,b)=>a+b,0);
+  const maxTotal = Math.max(...weights.map(w => (w / sum) * totalPaidRegs + organicPerMonth));
+
+  weights.forEach((w, i) => {
+    const paid = Math.round((w / sum) * totalPaidRegs);
+    const organic = Math.round(organicPerMonth);
+    const total = paid + organic;
+    const paidH = Math.max(3, (paid / Math.max(maxTotal,1)) * 82);
+    const orgH = Math.max(3, (organic / Math.max(maxTotal,1)) * 82);
+    const launch = i < 3;
+
+    const col = document.createElement('div');
+    col.className = 'pacing-col';
+
+    const paidBar = document.createElement('div');
+    paidBar.className = 'pacing-bar';
+    paidBar.style.cssText = `height:${paidH}px;background:${launch ? 'var(--purple)' : 'var(--teal)'};border-radius:4px 4px 0 0;opacity:${launch ? .78 : .9};`;
+    paidBar.dataset.tip = `M${i+1}: ${paid.toLocaleString()} paid`;
+
+    const orgBar = document.createElement('div');
+    orgBar.className = 'pacing-bar';
+    orgBar.style.cssText = `height:${orgH}px;background:rgba(245,166,35,.42);border-radius:0;`;
+    orgBar.dataset.tip = `M${i+1}: ${organic.toLocaleString()} organic · ${total.toLocaleString()} total`;
+
+    const tick = document.createElement('div');
+    tick.className = 'pacing-tick';
+    tick.textContent = `M${i+1}`;
+
+    col.appendChild(paidBar);
+    col.appendChild(orgBar);
+    col.appendChild(tick);
+    chart.appendChild(col);
+  });
+}
+
+['baselineCPA','organicRegs','duration','budget','profileRate','applicationRate'].forEach(id => {
+  $(id).addEventListener('input', onCustomChange);
+});
+
+renderScenarioBar();
+loadScenario('proposed');
+</script>
+</body>
+</html>
